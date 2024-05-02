@@ -1,0 +1,17 @@
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumBLL.deps.json
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumBLL.runtimeconfig.json
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumBLL.dll
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumBLL.pdb
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumDAL.dll
+D:\Edmentum\Application\POC\EdmentumBLL\bin\Debug\net8.0\EdmentumDAL.pdb
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.csproj.AssemblyReference.cache
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.AssemblyInfoInputs.cache
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.AssemblyInfo.cs
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.csproj.CoreCompileInputs.cache
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\Edmentum.0E76F915.Up2Date
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.dll
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\refint\EdmentumBLL.dll
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.pdb
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\EdmentumBLL.genruntimeconfig.cache
+D:\Edmentum\Application\POC\EdmentumBLL\obj\Debug\net8.0\ref\EdmentumBLL.dll

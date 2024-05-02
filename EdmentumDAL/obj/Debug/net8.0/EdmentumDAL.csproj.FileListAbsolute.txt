@@ -1,0 +1,14 @@
+D:\Edmentum\Application\POC\EdmentumDAL\bin\Debug\net8.0\EdmentumDAL.deps.json
+D:\Edmentum\Application\POC\EdmentumDAL\bin\Debug\net8.0\EdmentumDAL.runtimeconfig.json
+D:\Edmentum\Application\POC\EdmentumDAL\bin\Debug\net8.0\EdmentumDAL.dll
+D:\Edmentum\Application\POC\EdmentumDAL\bin\Debug\net8.0\EdmentumDAL.pdb
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.csproj.AssemblyReference.cache
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.AssemblyInfoInputs.cache
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.AssemblyInfo.cs
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.csproj.CoreCompileInputs.cache
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.dll
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\refint\EdmentumDAL.dll
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.pdb
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\EdmentumDAL.genruntimeconfig.cache
+D:\Edmentum\Application\POC\EdmentumDAL\obj\Debug\net8.0\ref\EdmentumDAL.dll

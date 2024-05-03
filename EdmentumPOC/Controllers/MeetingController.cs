@@ -56,10 +56,12 @@ namespace EdmentumPOC.Controllers
     public class MeetingController : ControllerBase
     {
         private readonly MeetingManager _meetingManager;
+        private readonly StudentMeetingManager _studentMeetingManager;
 
-        public MeetingController(MeetingManager meetingManager)
+        public MeetingController(MeetingManager meetingManager, StudentMeetingManager studentmeetingManager)
         {
             _meetingManager = meetingManager;
+            _studentMeetingManager = studentmeetingManager;
         }
 
         [HttpPost]
@@ -84,11 +86,23 @@ namespace EdmentumPOC.Controllers
                     // Add the meeting details to the database
                     var meeting = new Meeting
                     {
+                        Subject = request.Subject,
+                        Title = request.Title,
+                        StartTime = request.StartTime,
+                        EndTime = request.EndTime,
+                        TutorId = request.Tutor,
                         MeetingId = meetingId,
                         MeetingLink = meetingUrl
                     };
                     _meetingManager.AddMeeting(meeting);
 
+                    // Assuming request.Students is a collection of Student objects
+                    var studentMeetings = request.Students.Select(student => new StudentMeeting
+                    {
+                        StudentId = student.StudentId,
+                        MeetingId = meetingId
+                    }).ToList();
+                    _studentMeetingManager.AddRange(studentMeetings);
                     // Return a success response with meeting details
                     return Ok(new { MeetingId = meetingId, MeetingUrl = meetingUrl });
                 }

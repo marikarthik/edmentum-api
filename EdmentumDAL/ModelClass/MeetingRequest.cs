@@ -16,7 +16,7 @@ namespace EdmentumDAL.ModelClass
         [JsonProperty("EndTime")]
         public long EndTime { get; set; }
         [JsonProperty("Tutor")]
-        public string Tutor { get; set; }
+        public int Tutor { get; set; }
         [JsonProperty("Students")]
         public List<StudentList> Students { get; set; }
     }

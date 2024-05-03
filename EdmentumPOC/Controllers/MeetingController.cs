@@ -63,13 +63,14 @@ namespace EdmentumPOC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMeeting(MeetingRequest request)
+        public async Task<IActionResult> CreateMeeting(MeetingReq request)
         {
             try
             {
-                // Create the meeting via an external API
-                var response = await _meetingManager.CreateMeetingAsync(request);
-
+                MeetingRequest ObjmeetingRequest = new MeetingRequest();
+                ObjmeetingRequest = ArrangeInput(request);
+                //Create the meeting via an external API
+                var response = await _meetingManager.CreateMeetingAsync(ObjmeetingRequest);
                 if (response.IsSuccessStatusCode)
                 {
                     // If meeting creation is successful, deserialize the response body to get meeting details
@@ -151,6 +152,38 @@ namespace EdmentumPOC.Controllers
                 Console.WriteLine(errorMessage);
                 return StatusCode(500, errorMessage);
             }
+        }
+        private MeetingRequest ArrangeInput(MeetingReq meetingReq)
+        {
+            MeetingRequest meetingRequest = new MeetingRequest();
+
+            meetingRequest.MeetingTitle = meetingReq.Title;
+
+            meetingRequest.CountdownStartTime = 5;
+            meetingRequest.CallbackUrl = "<https://www.hilink.co/>";
+            meetingRequest.RedirectUrl = "<https://www.hilink.co/>";
+            meetingRequest.InvitationUrl = "<https://www.hilink.co/>";
+            meetingRequest.MeetingRegion = "us-east-2";
+            meetingRequest.MeetingExternalId = "1000001";
+            meetingRequest.Config = new Config();
+            meetingRequest.Config.EnableChat = true;
+            meetingRequest.Config.EnableRecording = true;
+            meetingRequest.Config.EnableFilePlayer = true;
+            meetingRequest.Config.EnableQuiz = true;
+            meetingRequest.Config.EnablePoll = true;
+            meetingRequest.Config.EnableClassroomInvitation = true;
+            meetingRequest.Config.RecordingFileTypes = ["mp4", "mp3"];
+            //meetingRequest.Config.RecordingFileTypes = ["mp4, mp3"];
+
+            meetingRequest.DocIds = [];
+            meetingRequest.LessonPlanUuids = [];
+            meetingRequest.QuizIds = [];
+            // subject
+            meetingRequest.StartTime=meetingReq.StartTime;
+            meetingRequest.EndTime = meetingReq.EndTime;
+            //tutor
+            //students
+            return meetingRequest;
         }
     }
 }

@@ -1,7 +1,31 @@
 ﻿using Newtonsoft.Json;
+using System.Runtime.InteropServices;
 
 namespace EdmentumDAL.ModelClass
 {
+    public class MeetingReq
+    {
+        [JsonProperty("Subject")]
+        public string Subject { get; set; }
+        [JsonProperty("Title")]
+        public string Title { get; set; }
+        [JsonProperty("Date")]
+        public DateOnly Date { get; set; }
+        [JsonProperty("StartTime")]
+        public long StartTime { get; set; }
+        [JsonProperty("EndTime")]
+        public long EndTime { get; set; }
+        [JsonProperty("Tutor")]
+        public string Tutor { get; set; }
+        [JsonProperty("Students")]
+        public List<StudentList> Students { get; set; }
+    }
+
+    public class StudentList
+    {
+        public string StudentId { get; set; }
+    }
+
     public class MeetingRequest
     {
         [JsonProperty("meetingExternalId")]

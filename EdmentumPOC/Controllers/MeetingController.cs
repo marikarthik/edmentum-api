@@ -48,8 +48,6 @@ using EdmentumBLL.Manager;
 using EdmentumDAL.ModelClass;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System;
-using System.Threading.Tasks;
 
 namespace EdmentumPOC.Controllers
 {
@@ -90,8 +88,8 @@ namespace EdmentumPOC.Controllers
                     };
                     _meetingManager.AddMeeting(meeting);
 
-                    // Return a success response
-                    return Ok("Meeting added successfully.");
+                    // Return a success response with meeting details
+                    return Ok(new { MeetingId = meetingId, MeetingUrl = meetingUrl });
                 }
                 else
                 {
@@ -105,6 +103,51 @@ namespace EdmentumPOC.Controllers
             {
                 // Handle any exceptions and return an error response
                 var errorMessage = $"Error creating meeting: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                return StatusCode(500, errorMessage);
+            }
+        }
+
+        [HttpGet("{meetingId}")]
+        public IActionResult GetMeeting(long meetingId)
+        {
+            try
+            {
+                // Get the meeting details 
+                var meeting = _meetingManager.GetMeetingById(meetingId);
+
+                if (meeting != null)
+                {
+                    // Return the meeting details
+                    return Ok(meeting);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error retrieving meeting: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                return StatusCode(500, errorMessage);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetAllMeetings()
+        {
+            try
+            {
+                // Retrieve all meetings from the MeetingManager
+                var meetings = _meetingManager.GetAllMeetings();
+
+                // Return the meetings as a response
+                return Ok(meetings);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error retrieving meetings: {ex.Message}";
                 Console.WriteLine(errorMessage);
                 return StatusCode(500, errorMessage);
             }

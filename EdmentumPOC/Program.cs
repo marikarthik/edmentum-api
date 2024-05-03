@@ -1,10 +1,6 @@
-using Microsoft.EntityFrameworkCore;
-using EdmentumDAL;
-using Microsoft.OpenApi.Models;
 using EdmentumBLL.Manager;
-
-
-
+using EdmentumDAL;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +16,18 @@ builder.Services.AddScoped<MeetingManager>();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen();
+
+// Enable CORS: Update it in hosted file
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin", builder =>
+    {
+        builder.AllowAnyOrigin() // Allow requests from any origin
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,6 +48,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseCors("AllowAnyOrigin");
+
 
 app.UseAuthorization();
 

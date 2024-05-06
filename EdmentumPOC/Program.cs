@@ -13,6 +13,7 @@ builder.Services.AddScoped<StudentManager>();
 builder.Services.AddScoped<TutorManager>();
 builder.Services.AddScoped<MeetingManager>();
 builder.Services.AddScoped<StudentMeetingManager>();
+builder.Services.AddScoped<TutorMeetingManager>();
 
 builder.Services.AddSwaggerGen();
 

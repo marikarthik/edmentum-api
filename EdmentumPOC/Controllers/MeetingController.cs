@@ -46,24 +46,25 @@ namespace EdmentumPOC.Controllers
                         StartTime = request.StartTime,
                         EndTime = request.EndTime,
                         HiLinkMeetingId = meetingId,
-                        MeetingLink = meetingUrl
+                        MeetingLink = meetingUrl,
+                        Status = "Scheduled"
                     };
                     _meetingManager.AddMeeting(meeting);
 
-                    // Add tutor-student relationships to the database
-                    //var tutorMeetings = request.Tutors.Select(tutor => new TutorMeeting
-                    //{
-                    //    TutorId = tutor.TutorId,
-                    //    HiLinkMeetingId = meetingId
-                    //}).ToList();
-                    //_tutorMeetingManager.AddRange(tutorMeetings);
+                    //Add tutor-student relationships to the database
+                    var tutorMeetings = request.Tutors.Select(tutor => new TutorMeeting
+                    {
+                        TutorId = tutor.TutorId,
+                        MeetingId = meeting.Id
+                    }).ToList();
+                    _tutorMeetingManager.AddRange(tutorMeetings);
 
-                    //var studentMeetings = request.Students.Select(student => new StudentMeeting
-                    //{
-                    //    StudentId = student.StudentId,
-                    //    HiLinkMeetingId = meetingId
-                    //}).ToList();
-                    //_studentMeetingManager.AddRange(studentMeetings);
+                    var studentMeetings = request.Students.Select(student => new StudentMeeting
+                    {
+                        StudentId = student.StudentId,
+                        MeetingId = meeting.Id
+                    }).ToList();
+                    _studentMeetingManager.AddRange(studentMeetings);
 
                     // Return a success response with meeting details
                     return Ok(new { MeetingId = meetingId, MeetingUrl = meetingUrl });

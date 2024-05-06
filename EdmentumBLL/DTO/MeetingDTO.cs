@@ -13,6 +13,8 @@ namespace EdmentumBLL.DTO
         public string MeetingLink { get; set; }
         public List<TutorsList> Tutors { get; set; }
         public List<StudentsList> Students { get; set; }
+        public string Status { get; set; }
+        public string Comments { get; set; }
     }
     public class TutorsList
     {

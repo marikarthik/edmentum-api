@@ -85,6 +85,8 @@ namespace EdmentumBLL.Manager
                                 .Select(st => st.StudentName)
                                 .FirstOrDefault()
                         }).ToList(),
+                    Status = m.Status,
+                    Comments = m.Comments
                 }).ToList();
 
             // Retrieve tutor names separately

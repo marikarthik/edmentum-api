@@ -14,7 +14,8 @@ namespace EdmentumDAL.ModelClass
         public long EndTime { get; set; }
         public string MeetingLink { get; set; }
         public long HiLinkMeetingId { get; set; }
-
+        public string Status { get; set; }
+        public string Comments { get; set; }
         // Navigation properties
         public virtual ICollection<TutorMeeting> TutorMeetings { get; set; }
         public virtual ICollection<StudentMeeting> StudentMeetings { get; set; }

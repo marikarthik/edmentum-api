@@ -31,7 +31,7 @@ namespace EdmentumBLL.Manager
             var tutors = _context.Tutors.ToList();
             return tutors.Select(t => new TutorDTO
             {
-                TutorId = t.TutorId,
+                TutorId = t.Id,
                 TutorName = t.TutorName                
             });
         }

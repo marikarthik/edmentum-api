@@ -12,24 +12,9 @@ namespace EdmentumDAL
         public DbSet<TutorMeeting> TutorMeetings { get; set; }
         public EdmentumContext(DbContextOptions<EdmentumContext> options) : base(options)
         {
-
         }
-
         public EdmentumContext()
         {
         }
-
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<StudentMeeting>()
-            //    .HasOne(u => u.Meeting)
-            //    .WithMany(u => u.StudentMeetings)
-            //    .HasForeignKey(u => u.MeetingId);
-
-
-
-
-        }
+    }
 }

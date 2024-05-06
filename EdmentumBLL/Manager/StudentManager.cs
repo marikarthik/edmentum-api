@@ -30,7 +30,7 @@ namespace EdmentumBLL.Manager
             var students = _context.Students.ToList();
             return students.Select(s => new StudentDTO
             {
-                StudentId = s.StudentId,
+                StudentId = s.Id,
                 StudentName = s.StudentName
             });
         }

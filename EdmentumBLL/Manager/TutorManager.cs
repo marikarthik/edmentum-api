@@ -18,10 +18,8 @@ namespace EdmentumBLL.Manager
             // Map DTO to entity
             var tutor = new Tutor
             {
-                TutorName = tutorDto.TutorName,
-                TutorId = tutorDto.TutorId
+                TutorName = tutorDto.TutorName
             };
-
             // Adding tutor to context and save changes
             _context.Tutors.Add(tutor);
             _context.SaveChanges();
@@ -33,9 +31,8 @@ namespace EdmentumBLL.Manager
             var tutors = _context.Tutors.ToList();
             return tutors.Select(t => new TutorDTO
             {
-                Id = t.Id,
-                TutorName = t.TutorName,
-                TutorId = t.TutorId
+                TutorId = t.TutorId,
+                TutorName = t.TutorName                
             });
         }
     }

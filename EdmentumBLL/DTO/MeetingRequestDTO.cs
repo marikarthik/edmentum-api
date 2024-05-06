@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json;
-using System.Runtime.InteropServices;
+﻿using EdmentumDAL.ModelClass;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace EdmentumDAL.ModelClass
+namespace EdmentumBLL.DTO
 {
-    public class MeetingReq
+    public class MeetingRequestDTO
     {
         [JsonProperty("Subject")]
         public string Subject { get; set; }
@@ -16,17 +21,19 @@ namespace EdmentumDAL.ModelClass
         [JsonProperty("EndTime")]
         public long EndTime { get; set; }
         [JsonProperty("Tutor")]
-        public int Tutor { get; set; }
+        public List<TutorList> Tutors { get; set; }
         [JsonProperty("Students")]
         public List<StudentList> Students { get; set; }
     }
-
+    public class TutorList
+    {
+        public int TutorId { get; set; }
+    }
     public class StudentList
     {
-        public string StudentId { get; set; }
+        public int StudentId { get; set; }
     }
-
-    public class MeetingRequest
+    public class HiLinkMeetingRequest
     {
         [JsonProperty("meetingExternalId")]
         public string MeetingExternalId { get; set; }

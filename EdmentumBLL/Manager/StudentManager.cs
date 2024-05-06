@@ -12,16 +12,13 @@ namespace EdmentumBLL.Manager
         {
             _context = context;
         }
-
         public void AddStudent(StudentDTO studentDto)
         {
             // Map 
             var student = new Student
             {
-                StudentName = studentDto.StudentName,
-                StudentId = studentDto.StudentId
+                StudentName = studentDto.StudentName               
             };
-
             // Adding student to context and save changes
             _context.Students.Add(student);
             _context.SaveChanges();
@@ -33,9 +30,8 @@ namespace EdmentumBLL.Manager
             var students = _context.Students.ToList();
             return students.Select(s => new StudentDTO
             {
-                Id = s.Id,
-                StudentName = s.StudentName,
-                StudentId = s.StudentId
+                StudentId = s.StudentId,
+                StudentName = s.StudentName
             });
         }
     }

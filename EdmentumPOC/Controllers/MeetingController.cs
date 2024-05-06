@@ -47,7 +47,8 @@ namespace EdmentumPOC.Controllers
                         EndTime = request.EndTime,
                         HiLinkMeetingId = meetingId,
                         MeetingLink = meetingUrl,
-                        Status = "Scheduled"
+                        Status = "Scheduled",
+                        Comments = ""
                     };
                     _meetingManager.AddMeeting(meeting);
 

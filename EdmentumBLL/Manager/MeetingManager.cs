@@ -22,7 +22,7 @@ namespace EdmentumBLL.Manager
                 string jsonRequest = JsonConvert.SerializeObject(request);
                 //For now hard coding it for POC
                 //string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE0NjgwNjEwMjYyOjdhMzNlY2ZhN2Q5YjBhZGU0ZWViNDEzMTk5ZTVkZjc1YmFiZjhiMGU5NDIyMWMyZTg0MzlhODQ1ZDIwOTU4NWY=";
-                string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MDIzMjkxMDYzOjQyNTg5MjlhZjE5ZDIyZGMwZTI0ZjQ2ZWYzZDYzOTViYzZmOTJjNTY3ODQ1NTllMWYyNzNiMDRhODJkNWExZTI=";
+                string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MDI5Mjc5NDA3OmUyOGY4Yzc4NDVhM2RmMmEzNjQ5YmYyMjY5NzljMDFlYzNiYmYxYjNmMDUyMTAzM2UzMzk3NTI5MjZhNzRjODc=";
 
 
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeader);

@@ -149,30 +149,48 @@ namespace EdmentumPOC.Controllers
             }
         }
 
+        //[HttpGet]
+        //public IActionResult GetAllMeetings()
+        //{
+        //    try
+        //    {
+        //        // Retrieve all meetings from the MeetingManager
+        //        var meetings = _meetingManager.GetAllMeetings();
+
+        //        // Return the meetings as a response
+        //        return Ok(meetings);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errorMessage = $"Error retrieving meetings: {ex.Message}";
+        //        Console.WriteLine(errorMessage);
+        //        return StatusCode(500, errorMessage);
+        //    }
+        //}
+
         [HttpGet]
         public IActionResult GetAllMeetings()
         {
             try
             {
                 // Retrieve all meetings from the MeetingManager
-                var meetings = _meetingManager.GetAllMeetings();
+                var studentMeetings = _meetingManager.GetAllStudentMeetings();
 
-                // Return the meetings as a response
-                return Ok(meetings);
+                // Return the student meetings as a response
+                return Ok(studentMeetings);
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Error retrieving meetings: {ex.Message}";
+                var errorMessage = $"Error retrieving student meetings: {ex.Message}";
                 Console.WriteLine(errorMessage);
                 return StatusCode(500, errorMessage);
             }
         }
+
         private MeetingRequest ArrangeInput(MeetingReq meetingReq)
         {
             MeetingRequest meetingRequest = new MeetingRequest();
-
             meetingRequest.MeetingTitle = meetingReq.Title;
-
             meetingRequest.CountdownStartTime = 5;
             meetingRequest.CallbackUrl = "<https://www.hilink.co/>";
             meetingRequest.RedirectUrl = "<https://www.hilink.co/>";
@@ -188,7 +206,6 @@ namespace EdmentumPOC.Controllers
             meetingRequest.Config.EnableClassroomInvitation = true;
             meetingRequest.Config.RecordingFileTypes = ["mp4", "mp3"];
             //meetingRequest.Config.RecordingFileTypes = ["mp4, mp3"];
-
             meetingRequest.DocIds = [];
             meetingRequest.LessonPlanUuids = [];
             meetingRequest.QuizIds = [];

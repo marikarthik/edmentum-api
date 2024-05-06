@@ -1,4 +1,5 @@
-﻿using EdmentumDAL;
+﻿using EdmentumBLL.DTO;
+using EdmentumDAL;
 using EdmentumDAL.ModelClass;
 using Newtonsoft.Json;
 using System.Text;
@@ -21,7 +22,7 @@ namespace EdmentumBLL.Manager
                 string jsonRequest = JsonConvert.SerializeObject(request);
                 //For now hard coding it for POC
                 //string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE0NjgwNjEwMjYyOjdhMzNlY2ZhN2Q5YjBhZGU0ZWViNDEzMTk5ZTVkZjc1YmFiZjhiMGU5NDIyMWMyZTg0MzlhODQ1ZDIwOTU4NWY=";
-                string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE0NzU3MTAyNzA1OjI3ZjEyNjFiODI2NmVkZThhMzk2N2U2ZjZkYzFlZTcxZTFiOWVkYjA1MjE3YTliMmFkMjY0Y2E0MTkzYWM2ODQ=";
+                string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MDIzMjkxMDYzOjQyNTg5MjlhZjE5ZDIyZGMwZTI0ZjQ2ZWYzZDYzOTViYzZmOTJjNTY3ODQ1NTllMWYyNzNiMDRhODJkNWExZTI=";
 
 
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeader);
@@ -48,10 +49,48 @@ namespace EdmentumBLL.Manager
             return _context.Meetings.FirstOrDefault(m => m.MeetingId == meetingId);
         }
 
-        public IEnumerable<Meeting> GetAllMeetings()
+        //public IEnumerable<Meeting> GetAllMeetings()
+        //{
+        //    // Retrieve all meetings from the database
+        //    return _context.Meetings.ToList();
+        //}
+
+        public IEnumerable<StudentMeetingDTO> GetAllStudentMeetings()
         {
-            // Retrieve all meetings from the database
-            return _context.Meetings.ToList();
+            var studentMeetings = _context.Meetings
+                .Select(m => new StudentMeetingDTO
+                {
+                    Id = m.Id,
+                    Subject = m.Subject,
+                    Title = m.Title,
+                    StartTime = m.StartTime,
+                    EndTime = m.EndTime,
+                    TutorId = m.TutorId,
+                    MeetingId = m.MeetingId,
+                    MeetingLink = m.MeetingLink,
+                    Students = _context.StudentMeetings
+                        .Where(sm => sm.MeetingId == m.MeetingId)
+                        .Select(sm => new EdmentumBLL.DTO.StudentList
+                        {
+                            StudentId = Convert.ToInt32(sm.StudentId),
+                            StudentName = _context.Students
+                                .Where(st => st.StudentId == Convert.ToInt32(sm.StudentId))
+                                .Select(st => st.StudentName)
+                                .FirstOrDefault()
+                        }).ToList(),
+                    TutorName = ""
+                }).ToList();
+
+            // Retrieve tutor names separately
+            foreach (var studentMeeting in studentMeetings)
+            {
+                var tutor = _context.Tutors.FirstOrDefault(t => t.TutorId == studentMeeting.TutorId);
+                studentMeeting.TutorName = tutor != null ? tutor.TutorName : "Bommannan R";
+            }
+
+            return studentMeetings;
         }
+
     }
+
 }

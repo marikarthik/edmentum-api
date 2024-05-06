@@ -12,12 +12,9 @@ namespace EdmentumDAL
         public DbSet<TutorMeeting> TutorMeetings { get; set; }
         public EdmentumContext(DbContextOptions<EdmentumContext> options) : base(options)
         {
-
         }
-
         public EdmentumContext()
         {
         }
-
     }
 }

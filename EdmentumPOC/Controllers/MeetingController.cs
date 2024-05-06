@@ -1,49 +1,4 @@
-﻿//using EdmentumBLL.Manager;
-//using EdmentumDAL.ModelClass;
-//using Microsoft.AspNetCore.Mvc;
-
-//namespace EdmentumPOC.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class MeetingController : ControllerBase
-//    {
-//        private readonly MeetingManager _meetingService;
-
-//        public MeetingController(MeetingManager meetingService)
-//        {
-//            _meetingService = meetingService;   
-//        }
-//        [HttpPost]
-//        public async Task<IActionResult> CreateMeeting(MeetingRequest request)
-//        {
-//            try
-//            {
-//                var response = await _meetingService.CreateMeetingAsync(request);
-
-//                if (response.IsSuccessStatusCode)
-//                {
-//                    string responseBody = await response.Content.ReadAsStringAsync();
-//                    return Ok(responseBody);
-//                }
-//                else
-//                {
-//                    string errorMessage = $"Error creating meeting. Status code: {response.StatusCode}";
-//                    Console.WriteLine(errorMessage);
-//                    return StatusCode((int)response.StatusCode, errorMessage);
-//                }
-//            }
-//            catch (Exception ex)
-//            {
-//                string errorMessage = $"Error creating meeting: {ex.Message}";
-//                Console.WriteLine(errorMessage);
-//                return StatusCode(500, errorMessage);
-//            }
-//        }
-//    }
-//}
-
-
+﻿using EdmentumBLL.DTO;
 using EdmentumBLL.Manager;
 using EdmentumDAL.ModelClass;
 using Microsoft.AspNetCore.Mvc;
@@ -56,29 +11,29 @@ namespace EdmentumPOC.Controllers
     public class MeetingController : ControllerBase
     {
         private readonly MeetingManager _meetingManager;
+        private readonly TutorMeetingManager _tutorMeetingManager;
         private readonly StudentMeetingManager _studentMeetingManager;
 
-        public MeetingController(MeetingManager meetingManager, StudentMeetingManager studentmeetingManager)
+        public MeetingController(MeetingManager meetingManager, TutorMeetingManager tutormeetingManager, StudentMeetingManager studentmeetingManager)
         {
             _meetingManager = meetingManager;
+            _tutorMeetingManager = tutormeetingManager;
             _studentMeetingManager = studentmeetingManager;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMeeting(MeetingReq request)
+        public async Task<IActionResult> CreateMeeting(MeetingRequestDTO request)
         {
             try
             {
-                MeetingRequest ObjmeetingRequest = new MeetingRequest();
-                ObjmeetingRequest = ArrangeInput(request);
-                //Create the meeting via an external API
+                HiLinkMeetingRequest ObjmeetingRequest = ArrangeInput(request);
+                // Create the meeting via an external API
                 var response = await _meetingManager.CreateMeetingAsync(ObjmeetingRequest);
                 if (response.IsSuccessStatusCode)
                 {
                     // If meeting creation is successful, deserialize the response body to get meeting details
                     var responseBody = await response.Content.ReadAsStringAsync();
                     dynamic meetingDetails = JsonConvert.DeserializeObject(responseBody);
-
                     // Extract meeting details
                     long meetingId = meetingDetails.meetingId;
                     string meetingUrl = meetingDetails.meetingUrl;
@@ -90,19 +45,26 @@ namespace EdmentumPOC.Controllers
                         Title = request.Title,
                         StartTime = request.StartTime,
                         EndTime = request.EndTime,
-                        TutorId = request.Tutor,
                         MeetingId = meetingId,
                         MeetingLink = meetingUrl
                     };
                     _meetingManager.AddMeeting(meeting);
 
-                    // Assuming request.Students is a collection of Student objects
+                    // Add tutor-student relationships to the database
+                    var tutorMeetings = request.Tutors.Select(tutor => new TutorMeeting
+                    {
+                        TutorId = tutor.TutorId,
+                        MeetingId = meetingId
+                    }).ToList();
+                    _tutorMeetingManager.AddRange(tutorMeetings);
+
                     var studentMeetings = request.Students.Select(student => new StudentMeeting
                     {
                         StudentId = student.StudentId,
                         MeetingId = meetingId
                     }).ToList();
                     _studentMeetingManager.AddRange(studentMeetings);
+
                     // Return a success response with meeting details
                     return Ok(new { MeetingId = meetingId, MeetingUrl = meetingUrl });
                 }
@@ -123,50 +85,33 @@ namespace EdmentumPOC.Controllers
             }
         }
 
-        [HttpGet("{meetingId}")]
-        public IActionResult GetMeeting(long meetingId)
-        {
-            try
-            {
-                // Get the meeting details 
-                var meeting = _meetingManager.GetMeetingById(meetingId);
 
-                if (meeting != null)
-                {
-                    // Return the meeting details
-                    return Ok(meeting);
-                }
-                else
-                {
-                    return NotFound();
-                }
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error retrieving meeting: {ex.Message}";
-                Console.WriteLine(errorMessage);
-                return StatusCode(500, errorMessage);
-            }
-        }
-
-        //[HttpGet]
-        //public IActionResult GetAllMeetings()
+        //[HttpGet("{meetingId}")]
+        //public IActionResult GetMeeting(long meetingId)
         //{
         //    try
         //    {
-        //        // Retrieve all meetings from the MeetingManager
-        //        var meetings = _meetingManager.GetAllMeetings();
+        //        // Get the meeting details 
+        //        var meeting = _meetingManager.GetMeetingById(meetingId);
 
-        //        // Return the meetings as a response
-        //        return Ok(meetings);
+        //        if (meeting != null)
+        //        {
+        //            // Return the meeting details
+        //            return Ok(meeting);
+        //        }
+        //        else
+        //        {
+        //            return NotFound();
+        //        }
         //    }
         //    catch (Exception ex)
         //    {
-        //        var errorMessage = $"Error retrieving meetings: {ex.Message}";
+        //        var errorMessage = $"Error retrieving meeting: {ex.Message}";
         //        Console.WriteLine(errorMessage);
         //        return StatusCode(500, errorMessage);
         //    }
         //}
+
 
         [HttpGet]
         public IActionResult GetAllMeetings()
@@ -174,7 +119,7 @@ namespace EdmentumPOC.Controllers
             try
             {
                 // Retrieve all meetings from the MeetingManager
-                var studentMeetings = _meetingManager.GetAllStudentMeetings();
+                var studentMeetings = _meetingManager.GetAllMeetings();
 
                 // Return the student meetings as a response
                 return Ok(studentMeetings);
@@ -187,9 +132,9 @@ namespace EdmentumPOC.Controllers
             }
         }
 
-        private MeetingRequest ArrangeInput(MeetingReq meetingReq)
+        private HiLinkMeetingRequest ArrangeInput(MeetingRequestDTO meetingReq)
         {
-            MeetingRequest meetingRequest = new MeetingRequest();
+            HiLinkMeetingRequest meetingRequest = new HiLinkMeetingRequest();
             meetingRequest.MeetingTitle = meetingReq.Title;
             meetingRequest.CountdownStartTime = 5;
             meetingRequest.CallbackUrl = "<https://www.hilink.co/>";

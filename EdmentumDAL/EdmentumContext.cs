@@ -9,6 +9,7 @@ namespace EdmentumDAL
         public DbSet<Tutor> Tutors {  get; set; }   
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<StudentMeeting> StudentMeetings { get; set; }
+        public DbSet<TutorMeeting> TutorMeetings { get; set; }
         public EdmentumContext(DbContextOptions<EdmentumContext> options) : base(options)
         {
 

@@ -16,8 +16,6 @@ builder.Services.AddScoped<StudentMeetingManager>();
 
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSwaggerGen();
-
 // Enable CORS: Update it in hosted file
 builder.Services.AddCors(options =>
 {

@@ -1,11 +1,5 @@
-﻿using EdmentumBLL.DTO;
+﻿using EdmentumDAL;
 using EdmentumDAL.ModelClass;
-using EdmentumDAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdmentumBLL.Manager
 {

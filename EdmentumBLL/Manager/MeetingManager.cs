@@ -63,25 +63,25 @@ namespace EdmentumBLL.Manager
                     StartTime = m.StartTime,
                     EndTime = m.EndTime,
                     //TutorId = m.TutorId,
-                    MeetingId = m.MeetingId,
+                    MeetingId = m.HiLinkMeetingId,
                     MeetingLink = m.MeetingLink,
                     Tutors = _context.TutorMeetings
-                        .Where(sm => sm.MeetingId == m.MeetingId)
+                        .Where(sm => sm.MeetingId == m.Id)
                         .Select(sm => new TutorsList
                         {
                             TutorId = sm.TutorId,
                             TutorName = _context.Tutors
-                                .Where(st => st.TutorId == sm.TutorId)
+                                .Where(st => st.Id == sm.TutorId)
                                 .Select(st => st.TutorName)
                                 .FirstOrDefault()
                         }).ToList(),
                     Students = _context.StudentMeetings
-                        .Where(sm => sm.MeetingId == m.MeetingId)
+                        .Where(sm => sm.MeetingId == m.Id)
                         .Select(sm => new StudentsList
                         {
                             StudentId = sm.StudentId,
                             StudentName = _context.Students
-                                .Where(st => st.StudentId == sm.StudentId)
+                                .Where(st => st.Id == sm.StudentId)
                                 .Select(st => st.StudentName)
                                 .FirstOrDefault()
                         }).ToList(),

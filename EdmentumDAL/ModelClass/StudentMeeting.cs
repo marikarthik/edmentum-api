@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EdmentumDAL.ModelClass
 {
@@ -6,9 +7,13 @@ namespace EdmentumDAL.ModelClass
     {
         [Key]
         public int Id { get; set; }
+        // Foreign key relationship
         public int StudentId { get; set; }
-        public long MeetingId { get; set; }
-        public Meeting Meeting { get; set; }
-        public Student Student { get; set; }
+        [ForeignKey("StudentId")]
+        public virtual Student Student { get; set; }
+        // Foreign key relationship
+        public int MeetingId { get; set; }
+        [ForeignKey("MeetingId")]
+        public virtual Meeting Meeting { get; set; }
     }
 }

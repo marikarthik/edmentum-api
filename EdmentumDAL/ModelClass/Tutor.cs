@@ -5,7 +5,10 @@ namespace EdmentumDAL.ModelClass
     public class Tutor
     {
         [Key]
-        public int TutorId { get; set; }
+        public int Id { get; set; }
         public string TutorName { get; set; }
+
+        // Navigation properties
+        public virtual ICollection<TutorMeeting> TutorMeetings { get; set; }
     }
 }

@@ -45,25 +45,25 @@ namespace EdmentumPOC.Controllers
                         Title = request.Title,
                         StartTime = request.StartTime,
                         EndTime = request.EndTime,
-                        MeetingId = meetingId,
+                        HiLinkMeetingId = meetingId,
                         MeetingLink = meetingUrl
                     };
                     _meetingManager.AddMeeting(meeting);
 
                     // Add tutor-student relationships to the database
-                    var tutorMeetings = request.Tutors.Select(tutor => new TutorMeeting
-                    {
-                        TutorId = tutor.TutorId,
-                        MeetingId = meetingId
-                    }).ToList();
-                    _tutorMeetingManager.AddRange(tutorMeetings);
+                    //var tutorMeetings = request.Tutors.Select(tutor => new TutorMeeting
+                    //{
+                    //    TutorId = tutor.TutorId,
+                    //    HiLinkMeetingId = meetingId
+                    //}).ToList();
+                    //_tutorMeetingManager.AddRange(tutorMeetings);
 
-                    var studentMeetings = request.Students.Select(student => new StudentMeeting
-                    {
-                        StudentId = student.StudentId,
-                        MeetingId = meetingId
-                    }).ToList();
-                    _studentMeetingManager.AddRange(studentMeetings);
+                    //var studentMeetings = request.Students.Select(student => new StudentMeeting
+                    //{
+                    //    StudentId = student.StudentId,
+                    //    HiLinkMeetingId = meetingId
+                    //}).ToList();
+                    //_studentMeetingManager.AddRange(studentMeetings);
 
                     // Return a success response with meeting details
                     return Ok(new { MeetingId = meetingId, MeetingUrl = meetingUrl });

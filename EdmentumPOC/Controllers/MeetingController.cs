@@ -134,43 +134,13 @@ namespace EdmentumPOC.Controllers
             }
         }
 
-        [HttpPost("UpdateStartMeetStatus/{meetingId}")]
-        public IActionResult UpdateStartMeetStatus(int meetingId)
+        [HttpPost("updateMeetingStatus/{meetingId}/{status}")]
+        public IActionResult UpdateMeetingStatus(int meetingId, string status)
         {
             try
             {
-                _meetingManager.UpdateMeetingStatus(meetingId, "Started");
+                _meetingManager.UpdateMeetingStatus(meetingId, status);
                 return Ok("Meeting status updated to Started successfully.");
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error updating meeting status: {ex.Message}";
-                return StatusCode(500, errorMessage);
-            }
-        }
-
-        [HttpPost("UpdateEndMeetStatus/{meetingId}")]
-        public IActionResult UpdateEndMeetStatus(int meetingId)
-        {
-            try
-            {
-                _meetingManager.UpdateMeetingStatus(meetingId, "Completed");
-                return Ok("Meeting status updated to Completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error updating meeting status: {ex.Message}";
-                return StatusCode(500, errorMessage);
-            }
-        }
-
-        [HttpPost("UpdateCancelMeetStatus/{meetingId}")]
-        public IActionResult UpdateCancelMeetStatus(int meetingId)
-        {
-            try
-            {
-                _meetingManager.UpdateMeetingStatus(meetingId, "Cancelled");
-                return Ok("Meeting status updated to Cancelled successfully.");
             }
             catch (Exception ex)
             {

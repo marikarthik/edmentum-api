@@ -135,6 +135,21 @@ namespace EdmentumPOC.Controllers
             }
         }
 
+        [HttpPost("updateMeetingStatus/{meetingId}/{status}")]
+        public IActionResult UpdateMeetingStatus(int meetingId, string status)
+        {
+            try
+            {
+                _meetingManager.UpdateMeetingStatus(meetingId, status);
+                return Ok("Meeting status updated to Started successfully.");
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error updating meeting status: {ex.Message}";
+                return StatusCode(500, errorMessage);
+            }
+        }
+
         private HiLinkMeetingRequest ArrangeInput(MeetingRequestDTO meetingReq)
         {
             HiLinkMeetingRequest meetingRequest = new HiLinkMeetingRequest();

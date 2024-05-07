@@ -140,8 +140,11 @@ namespace EdmentumPOC.Controllers
         {
             try
             {
+                ReturnResponse result = new ReturnResponse();
                 _meetingManager.UpdateMeetingStatus(meetingId, status);
-                return Ok("Meeting status updated to Started successfully.");
+                result.message = "Meeting status updated successfully.";
+                result.statuscode = 200;
+                return Ok(result);
             }
             catch (Exception ex)
             {

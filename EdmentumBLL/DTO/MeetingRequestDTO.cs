@@ -1,10 +1,5 @@
 ﻿using EdmentumDAL.ModelClass;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EdmentumBLL.DTO
 {
@@ -20,7 +15,7 @@ namespace EdmentumBLL.DTO
         public long StartTime { get; set; }
         [JsonProperty("EndTime")]
         public long EndTime { get; set; }
-        [JsonProperty("Tutor")]
+        [JsonProperty("Tutors")]
         public List<TutorList> Tutors { get; set; }
         [JsonProperty("Students")]
         public List<StudentList> Students { get; set; }
@@ -73,5 +68,18 @@ namespace EdmentumBLL.DTO
 
         [JsonProperty("quizIds")]
         public List<string> QuizIds { get; set; }
+    }
+    public class UpdateMeeting
+    {
+        [JsonProperty("Id")]
+        public int Id { get; set; }
+        [JsonProperty("Subject")]
+        public string Subject { get; set; }
+        [JsonProperty("Tutors")]
+        public List<TutorList> Tutors { get; set; }
+        [JsonProperty("Students")]
+        public List<StudentList> Students { get; set; }
+        [JsonProperty("Comments")]
+        public string Comments { get; set; }
     }
 }

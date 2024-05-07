@@ -10,10 +10,14 @@ namespace EdmentumBLL.Manager
     {
         private readonly EdmentumContext _context;
         private readonly HttpClient _httpClient;
-        public MeetingManager(EdmentumContext context, HttpClient httpClient)
+        private readonly StudentMeetingManager _studentMeetingManager;
+        private readonly TutorMeetingManager _tutorMeetingManager;
+        public MeetingManager(EdmentumContext context, HttpClient httpClient, StudentMeetingManager studentmeetingManager, TutorMeetingManager tutorMeetingManager)
         {
             _httpClient = httpClient;
             _context = context;
+            _studentMeetingManager = studentmeetingManager;
+            _tutorMeetingManager = tutorMeetingManager;
         }
         public async Task<HttpResponseMessage> CreateMeetingAsync(HiLinkMeetingRequest request)
         {
@@ -57,7 +61,7 @@ namespace EdmentumBLL.Manager
             var studentMeetings = _context.Meetings
                 .Select(m => new MeetingDTO
                 {
-                    //Id = m.Id,
+                    Id = m.Id,
                     Subject = m.Subject,
                     Title = m.Title,
                     StartTime = m.StartTime,
@@ -88,17 +92,53 @@ namespace EdmentumBLL.Manager
                     Status = m.Status,
                     Comments = m.Comments
                 }).ToList();
-
-            // Retrieve tutor names separately
-            //foreach (var studentMeeting in studentMeetings)
-            //{
-            //    var tutor = _context.Tutors.FirstOrDefault(t => t.TutorId == studentMeeting.TutorId);
-            //    studentMeeting.TutorName = tutor != null ? tutor.TutorName : "Bommannan R";
-            //}
-
             return studentMeetings;
         }
+        public void UpdateMeeting(UpdateMeeting updateReq)
+        {
+            try
+            {
+                var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == updateReq.Id);
+                if (meetingToUpdate != null)
+                {
+                    meetingToUpdate.Subject = updateReq.Subject;
+                    meetingToUpdate.Comments = updateReq.Comments;
+                    _context.SaveChanges();
+                }
 
+                if (updateReq.Tutors.Count != 0)
+                {
+                    var existingTutorMeetings = _context.TutorMeetings.Where(tm => tm.MeetingId == updateReq.Id);
+                    _context.TutorMeetings.RemoveRange(existingTutorMeetings);
+                    _context.SaveChanges();
+
+                    var tutorMeetings = updateReq.Tutors.Select(tutor => new TutorMeeting
+                    {
+                        TutorId = tutor.TutorId,
+                        MeetingId = updateReq.Id
+                    }).ToList();
+                    _tutorMeetingManager.AddRange(tutorMeetings);
+                }
+
+                if (updateReq.Students.Count != 0)
+                {
+                    var existingstudentMeetings = _context.StudentMeetings.Where(tm => tm.MeetingId == updateReq.Id);
+                    _context.StudentMeetings.RemoveRange(existingstudentMeetings);
+                    _context.SaveChanges();
+
+                    var studentMeetings = updateReq.Students.Select(student => new StudentMeeting
+                    {
+                        StudentId = student.StudentId,
+                        MeetingId = updateReq.Id
+                    }).ToList();
+                    _studentMeetingManager.AddRange(studentMeetings);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in UpdateMeeting: ", ex);
+            }
+        }
     }
 
 }

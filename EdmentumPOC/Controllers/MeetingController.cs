@@ -163,5 +163,20 @@ namespace EdmentumPOC.Controllers
             //students
             return meetingRequest;
         }
+        [Route("UpdateMeeting")]
+        [HttpPost]
+        public IActionResult UpdateMeeting(UpdateMeeting updateReq)
+        {
+            try
+            {
+                _meetingManager.UpdateMeeting(updateReq);
+                return Ok("Updated Successfully.");
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error retrieving meeting: {ex.Message}";
+                return StatusCode(500, errorMessage);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EdmentumBLL.DTO;
+using EdmentumBLL.Utils;
 using EdmentumDAL;
 using EdmentumDAL.ModelClass;
 using Newtonsoft.Json;
@@ -24,39 +25,24 @@ namespace EdmentumBLL.Manager
             try
             {
                 string jsonRequest = JsonConvert.SerializeObject(request);
-                //For now hard coding it for POC
-                //string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE0NjgwNjEwMjYyOjdhMzNlY2ZhN2Q5YjBhZGU0ZWViNDEzMTk5ZTVkZjc1YmFiZjhiMGU5NDIyMWMyZTg0MzlhODQ1ZDIwOTU4NWY=";
-                string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MTEwNzc2ODU3OjcxNmIxODEwYzU1NzJkN2E3NDBmYzhjMWI2YWNmNWY2NmI5ZjA0NzljYmNhN2E4ZmRmNjJjYzUzN2M2OGZkZmI=";
+                string authHeader = BasicAuthorizationHelper.GenerateAuthorization(Constants.AccessKey, Constants.SecretKey);
+                //string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MTEwNzc2ODU3OjcxNmIxODEwYzU1NzJkN2E3NDBmYzhjMWI2YWNmNWY2NmI5ZjA0NzljYmNhN2E4ZmRmNjJjYzUzN2M2OGZkZmI=";
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeader);
                 return await _httpClient.PostAsync("https://vcaas.hilink.co/api/v2/meeting-center/meetings", new StringContent(jsonRequest, Encoding.UTF8, "application/json"));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                throw new Exception("An error occurred while creating a meeting: " + ex.Message);
             }
         }
 
         public void AddMeeting(Meeting meeting)
         {
-            // Add the meeting details to the database
             _context.Meetings.Add(meeting);
             _context.SaveChanges();
         }
 
-        //public Meeting GetMeetingById(long meetingId)
-        //{
-        //    // Retrieve the meeting from the database by its ID
-        //    return _context.Meetings.FirstOrDefault(m => m.MeetingId == meetingId);
-        //}
-
-        //public IEnumerable<Meeting> GetAllMeetings()
-        //{
-        //    // Retrieve all meetings from the database
-        //    return _context.Meetings.ToList();
-        //}
-
-        public IEnumerable<MeetingDTO> GetAllMeetings()
+                public IEnumerable<MeetingDTO> GetAllMeetings()
         {
             var studentMeetings = _context.Meetings
                 .Select(m => new MeetingDTO
@@ -157,6 +143,56 @@ namespace EdmentumBLL.Manager
             }
         }
 
-    }
+        public JoinTokenResponse CreateJoinTokenAsync(JoinTokenDTO request)
+        {
+            try
+            {
+                Dictionary<string, string> parameters = new Dictionary<string, string>();
+                var meeting = _context.Meetings.FirstOrDefault(m => m.Id == request.MeetingId);
+                if (meeting == null)
+                {
+                    throw new Exception("Meeting not found");
+                }
 
+                parameters.Add("meetingUid", meeting.HiLinkMeetingId.ToString());
+
+                if (request.Role.ToLower() == "student")
+                {
+                    var student = _context.Students.FirstOrDefault(s => s.Id == request.JoineeId);
+                    if (student == null)
+                    {
+                        throw new Exception("Joinee not found");
+                    }
+
+                    parameters.Add("externalRole", "ATTENDEE");
+                    parameters.Add("externalId", request.JoineeId.ToString());
+                    parameters.Add("externalName", student.StudentName);
+                }
+                else if (request.Role.ToLower() == "tutor")
+                {
+                    var tutor = _context.Tutors.FirstOrDefault(t => t.Id == request.JoineeId);
+                    if (tutor == null)
+                    {
+                        throw new Exception("Joinee not found");
+                    }
+
+                    parameters.Add("externalRole", "HOST");
+                    parameters.Add("externalId", request.JoineeId.ToString());
+                    parameters.Add("externalName", tutor.TutorName);
+                }
+
+                var token = JoinMeetingTokenHelper.GenerateJoinToken(parameters);
+                JoinTokenResponse joinTokenResponse = new JoinTokenResponse();
+                joinTokenResponse.Token = token;
+                joinTokenResponse.MeetingId = meeting.HiLinkMeetingId;
+                joinTokenResponse.MeetingUrl = meeting.MeetingLink;
+                return joinTokenResponse;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An error occurred while creating join token: " + ex.Message);
+            }
+        }
+    }
 }
+

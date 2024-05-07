@@ -81,50 +81,19 @@ namespace EdmentumPOC.Controllers
             }
             catch (Exception ex)
             {
-                // Handle any exceptions and return an error response
                 var errorMessage = $"Error creating meeting: {ex.Message}";
                 Console.WriteLine(errorMessage);
                 return StatusCode(500, errorMessage);
             }
         }
 
-
-        //[HttpGet("{meetingId}")]
-        //public IActionResult GetMeeting(long meetingId)
-        //{
-        //    try
-        //    {
-        //        // Get the meeting details 
-        //        var meeting = _meetingManager.GetMeetingById(meetingId);
-
-        //        if (meeting != null)
-        //        {
-        //            // Return the meeting details
-        //            return Ok(meeting);
-        //        }
-        //        else
-        //        {
-        //            return NotFound();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var errorMessage = $"Error retrieving meeting: {ex.Message}";
-        //        Console.WriteLine(errorMessage);
-        //        return StatusCode(500, errorMessage);
-        //    }
-        //}
-
-
         [HttpGet]
         public IActionResult GetAllMeetings()
         {
             try
             {
-                // Retrieve all meetings from the MeetingManager
                 var studentMeetings = _meetingManager.GetAllMeetings();
 
-                // Return the student meetings as a response
                 return Ok(studentMeetings);
             }
             catch (Exception ex)
@@ -134,7 +103,6 @@ namespace EdmentumPOC.Controllers
                 return StatusCode(500, errorMessage);
             }
         }
-
         [HttpPost("updateMeetingStatus/{meetingId}/{status}")]
         public IActionResult UpdateMeetingStatus(int meetingId, string status)
         {
@@ -197,6 +165,21 @@ namespace EdmentumPOC.Controllers
             catch (Exception ex)
             {
                 var errorMessage = $"Error retrieving meeting: {ex.Message}";
+                return StatusCode(500, errorMessage);
+            }
+        }
+        [HttpPost("create-join-token")]
+        public async Task<IActionResult> CreateJoinToken(JoinTokenDTO request)
+        {
+            try
+            {
+                var result = _meetingManager.CreateJoinTokenAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error generating the token: {ex.Message}";
+                Console.WriteLine(errorMessage);
                 return StatusCode(500, errorMessage);
             }
         }

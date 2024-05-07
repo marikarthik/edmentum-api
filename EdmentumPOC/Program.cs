@@ -27,6 +27,16 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowSpecificOrigin", builder =>
+//    {
+//        builder.WithOrigins("http://ed.triconinfotech.net/")
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//    });
+//});
+
 
 var app = builder.Build();
 
@@ -44,7 +54,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

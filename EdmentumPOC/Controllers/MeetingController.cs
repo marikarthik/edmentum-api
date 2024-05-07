@@ -1,6 +1,7 @@
 ﻿using EdmentumBLL.DTO;
 using EdmentumBLL.Manager;
 using EdmentumDAL.ModelClass;
+using EdmentumPOC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -182,10 +183,13 @@ namespace EdmentumPOC.Controllers
         [HttpPost]
         public IActionResult UpdateMeeting(UpdateMeeting updateReq)
         {
+            ReturnResponse result = new ReturnResponse();
             try
             {
-                _meetingManager.UpdateMeeting(updateReq);
-                return Ok("Updated Successfully.");
+                _meetingManager.UpdateMeeting(updateReq); 
+                result.message = "Updated Successfully.";
+                result.statuscode = 200;
+                return Ok(result);
             }
             catch (Exception ex)
             {

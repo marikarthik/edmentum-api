@@ -5,6 +5,7 @@ namespace EdmentumBLL.DTO
 {
     public class MeetingDTO
     {
+        public int Id { get; set; }
         public string Subject { get; set; }
         public string Title { get; set; }
         public long StartTime { get; set; }

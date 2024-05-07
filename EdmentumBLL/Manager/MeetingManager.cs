@@ -11,10 +11,14 @@ namespace EdmentumBLL.Manager
     {
         private readonly EdmentumContext _context;
         private readonly HttpClient _httpClient;
-        public MeetingManager(EdmentumContext context, HttpClient httpClient)
+        private readonly StudentMeetingManager _studentMeetingManager;
+        private readonly TutorMeetingManager _tutorMeetingManager;
+        public MeetingManager(EdmentumContext context, HttpClient httpClient, StudentMeetingManager studentmeetingManager, TutorMeetingManager tutorMeetingManager)
         {
             _httpClient = httpClient;
             _context = context;
+            _studentMeetingManager = studentmeetingManager;
+            _tutorMeetingManager = tutorMeetingManager;
         }
         public async Task<HttpResponseMessage> CreateMeetingAsync(HiLinkMeetingRequest request)
         {
@@ -22,6 +26,7 @@ namespace EdmentumBLL.Manager
             {
                 string jsonRequest = JsonConvert.SerializeObject(request);
                 string authHeader = BasicAuthorizationHelper.GenerateAuthorization(Constants.AccessKey, Constants.SecretKey);
+                //string authHeader = "R2N2ZzNRZ1RjNmpqZHRaVi4xNzE1MTEwNzc2ODU3OjcxNmIxODEwYzU1NzJkN2E3NDBmYzhjMWI2YWNmNWY2NmI5ZjA0NzljYmNhN2E4ZmRmNjJjYzUzN2M2OGZkZmI=";
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authHeader);
                 return await _httpClient.PostAsync("https://vcaas.hilink.co/api/v2/meeting-center/meetings", new StringContent(jsonRequest, Encoding.UTF8, "application/json"));
             }
@@ -37,15 +42,17 @@ namespace EdmentumBLL.Manager
             _context.SaveChanges();
         }
 
-        public IEnumerable<MeetingDTO> GetAllMeetings()
+                public IEnumerable<MeetingDTO> GetAllMeetings()
         {
             var studentMeetings = _context.Meetings
                 .Select(m => new MeetingDTO
                 {
+                    Id = m.Id,
                     Subject = m.Subject,
                     Title = m.Title,
                     StartTime = m.StartTime,
                     EndTime = m.EndTime,
+                    //TutorId = m.TutorId,
                     MeetingId = m.HiLinkMeetingId,
                     MeetingLink = m.MeetingLink,
                     Tutors = _context.TutorMeetings
@@ -71,8 +78,69 @@ namespace EdmentumBLL.Manager
                     Status = m.Status,
                     Comments = m.Comments
                 }).ToList();
-
             return studentMeetings;
+        }
+        public void UpdateMeeting(UpdateMeeting updateReq)
+        {
+            try
+            {
+                var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == updateReq.Id);
+                if (meetingToUpdate != null)
+                {
+                    meetingToUpdate.Subject = updateReq.Subject;
+                    meetingToUpdate.Comments = updateReq.Comments;
+                    _context.SaveChanges();
+                }
+
+                if (updateReq.Tutors.Count != 0)
+                {
+                    var existingTutorMeetings = _context.TutorMeetings.Where(tm => tm.MeetingId == updateReq.Id);
+                    _context.TutorMeetings.RemoveRange(existingTutorMeetings);
+                    _context.SaveChanges();
+
+                    var tutorMeetings = updateReq.Tutors.Select(tutor => new TutorMeeting
+                    {
+                        TutorId = tutor.TutorId,
+                        MeetingId = updateReq.Id
+                    }).ToList();
+                    _tutorMeetingManager.AddRange(tutorMeetings);
+                }
+
+                if (updateReq.Students.Count != 0)
+                {
+                    var existingstudentMeetings = _context.StudentMeetings.Where(tm => tm.MeetingId == updateReq.Id);
+                    _context.StudentMeetings.RemoveRange(existingstudentMeetings);
+                    _context.SaveChanges();
+
+                    var studentMeetings = updateReq.Students.Select(student => new StudentMeeting
+                    {
+                        StudentId = student.StudentId,
+                        MeetingId = updateReq.Id
+                    }).ToList();
+                    _studentMeetingManager.AddRange(studentMeetings);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in UpdateMeeting: ", ex);
+            }
+        }
+
+        public void UpdateMeetingStatus(int meetingId, string status)
+        {
+            try
+            {
+                var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == meetingId);
+                if (meetingToUpdate != null)
+                {
+                    meetingToUpdate.Status = status;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating meeting status: ", ex);
+            }
         }
 
         public JoinTokenResponse CreateJoinTokenAsync(JoinTokenDTO request)

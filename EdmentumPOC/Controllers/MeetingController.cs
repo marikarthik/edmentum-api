@@ -1,6 +1,7 @@
 ﻿using EdmentumBLL.DTO;
 using EdmentumBLL.Manager;
 using EdmentumDAL.ModelClass;
+using EdmentumPOC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -102,24 +103,25 @@ namespace EdmentumPOC.Controllers
                 return StatusCode(500, errorMessage);
             }
         }
-
-        [HttpPost("create-join-token")]
-        public async Task<IActionResult> CreateJoinToken(JoinTokenDTO request)
+        [HttpPost("updateMeetingStatus/{meetingId}/{status}")]
+        public IActionResult UpdateMeetingStatus(int meetingId, string status)
         {
             try
             {
-                var result = _meetingManager.CreateJoinTokenAsync(request);
+                ReturnResponse result = new ReturnResponse();
+                _meetingManager.UpdateMeetingStatus(meetingId, status);
+                result.message = "Meeting status updated successfully.";
+                result.statuscode = 200;
                 return Ok(result);
             }
             catch (Exception ex)
             {
-                var errorMessage = $"Error generating the token: {ex.Message}";
-                Console.WriteLine(errorMessage);
+                var errorMessage = $"Error updating meeting status: {ex.Message}";
                 return StatusCode(500, errorMessage);
             }
         }
 
-            private HiLinkMeetingRequest ArrangeInput(MeetingRequestDTO meetingReq)
+        private HiLinkMeetingRequest ArrangeInput(MeetingRequestDTO meetingReq)
         {
             HiLinkMeetingRequest meetingRequest = new HiLinkMeetingRequest();
             meetingRequest.MeetingTitle = meetingReq.Title;
@@ -137,12 +139,49 @@ namespace EdmentumPOC.Controllers
             meetingRequest.Config.EnablePoll = true;
             meetingRequest.Config.EnableClassroomInvitation = true;
             meetingRequest.Config.RecordingFileTypes = ["mp4", "mp3"];
+            //meetingRequest.Config.RecordingFileTypes = ["mp4, mp3"];
             meetingRequest.DocIds = [];
             meetingRequest.LessonPlanUuids = [];
             meetingRequest.QuizIds = [];
+            // subject
             meetingRequest.StartTime=meetingReq.StartTime;
             meetingRequest.EndTime = meetingReq.EndTime;
+            //tutor
+            //students
             return meetingRequest;
+        }
+        [Route("UpdateMeeting")]
+        [HttpPost]
+        public IActionResult UpdateMeeting(UpdateMeeting updateReq)
+        {
+            ReturnResponse result = new ReturnResponse();
+            try
+            {
+                _meetingManager.UpdateMeeting(updateReq); 
+                result.message = "Updated Successfully.";
+                result.statuscode = 200;
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error retrieving meeting: {ex.Message}";
+                return StatusCode(500, errorMessage);
+            }
+        }
+        [HttpPost("create-join-token")]
+        public async Task<IActionResult> CreateJoinToken(JoinTokenDTO request)
+        {
+            try
+            {
+                var result = _meetingManager.CreateJoinTokenAsync(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error generating the token: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                return StatusCode(500, errorMessage);
+            }
         }
     }
 }

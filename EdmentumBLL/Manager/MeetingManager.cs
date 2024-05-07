@@ -139,6 +139,24 @@ namespace EdmentumBLL.Manager
                 throw new Exception("Error in UpdateMeeting: ", ex);
             }
         }
+
+        public void UpdateMeetingStatus(int meetingId, string status)
+        {
+            try
+            {
+                var meetingToUpdate = _context.Meetings.FirstOrDefault(m => m.Id == meetingId);
+                if (meetingToUpdate != null)
+                {
+                    meetingToUpdate.Status = status;
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating meeting status: ", ex);
+            }
+        }
+
     }
 
 }

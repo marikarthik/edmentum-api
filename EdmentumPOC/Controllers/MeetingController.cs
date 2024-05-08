@@ -103,24 +103,6 @@ namespace EdmentumPOC.Controllers
                 return StatusCode(500, errorMessage);
             }
         }
-        [HttpPost("updateMeetingStatus/{meetingId}/{status}")]
-        public IActionResult UpdateMeetingStatus(int meetingId, string status)
-        {
-            try
-            {
-                ReturnResponse result = new ReturnResponse();
-                _meetingManager.UpdateMeetingStatus(meetingId, status);
-                result.message = "Meeting status updated successfully.";
-                result.statuscode = 200;
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                var errorMessage = $"Error updating meeting status: {ex.Message}";
-                return StatusCode(500, errorMessage);
-            }
-        }
-
         private HiLinkMeetingRequest ArrangeInput(MeetingRequestDTO meetingReq)
         {
             HiLinkMeetingRequest meetingRequest = new HiLinkMeetingRequest();

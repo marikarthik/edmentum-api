@@ -150,6 +150,7 @@ namespace EdmentumPOC.Controllers
             //students
             return meetingRequest;
         }
+
         [Route("UpdateMeeting")]
         [HttpPost]
         public IActionResult UpdateMeeting(UpdateMeeting updateReq)
@@ -183,5 +184,25 @@ namespace EdmentumPOC.Controllers
                 return StatusCode(500, errorMessage);
             }
         }
+
+
+        [HttpPost("update-info")]
+        public IActionResult UpdateAttendeeInfo([FromBody] AttendeeUpdateDTO request)
+        {
+            try
+            {
+                _meetingManager.UpdateAttendeeInfo(request.AttendeeId, request.JoiningTime, request.MeetingId, request.Role);
+                return Ok("Attendee information updated successfully.");
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error updating attendee information: {ex.Message}";
+                Console.WriteLine(errorMessage);
+                return StatusCode(500, errorMessage);
+            }
+        }
+
+
+
     }
 }

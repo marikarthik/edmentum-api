@@ -42,7 +42,7 @@ namespace EdmentumBLL.Manager
             _context.SaveChanges();
         }
 
-                public IEnumerable<MeetingDTO> GetAllMeetings()
+        public IEnumerable<MeetingDTO> GetAllMeetings()
         {
             var studentMeetings = _context.Meetings
                 .Select(m => new MeetingDTO
@@ -193,6 +193,65 @@ namespace EdmentumBLL.Manager
                 throw new Exception("An error occurred while creating join token: " + ex.Message);
             }
         }
+
+        public void UpdateAttendeeInfo(int attendeeId, long joiningTime, int meetingId, string role)
+        {
+            try
+            {
+                var existingStudentMeeting = _context.StudentMeetings.FirstOrDefault(sm => sm.StudentId == attendeeId && sm.MeetingId == meetingId);
+                var existingTutorMeeting = _context.TutorMeetings.FirstOrDefault(tm => tm.TutorId == attendeeId && tm.MeetingId == meetingId);
+
+                if (role.ToLower() == "student")
+                {
+                    if (existingStudentMeeting != null)
+                    {
+                        existingStudentMeeting.JoiningTime = joiningTime;
+                        existingStudentMeeting.MeetingStatus = true;
+                    }
+                    else
+                    {
+                        var studentMeeting = new StudentMeeting
+                        {
+                            StudentId = attendeeId,
+                            MeetingId = meetingId,
+                            JoiningTime = joiningTime,
+                            MeetingStatus = true
+                        };
+                        _context.StudentMeetings.Add(studentMeeting);
+                    }
+                }
+                else if (role.ToLower() == "tutor")
+                {
+                    if (existingTutorMeeting != null)
+                    {
+                        existingTutorMeeting.JoiningTime = joiningTime;
+                        existingTutorMeeting.MeetingStatus = true;
+                    }
+                    else
+                    {
+                        var tutorMeeting = new TutorMeeting
+                        {
+                            TutorId = attendeeId,
+                            MeetingId = meetingId,
+                            JoiningTime = joiningTime,
+                            MeetingStatus = true
+                        };
+                        _context.TutorMeetings.Add(tutorMeeting);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid role provided.");
+                }
+
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error updating attendee information.", ex);
+            }
+        }
+
     }
 }
 

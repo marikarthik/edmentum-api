@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EdmentumDAL.ModelClass
@@ -15,5 +16,8 @@ namespace EdmentumDAL.ModelClass
         public int MeetingId { get; set; }
         [ForeignKey("MeetingId")]
         public virtual Meeting Meeting { get; set; }
+        public long JoiningTime { get; set; }
+        [DefaultValue("false")]
+        public bool MeetingStatus { get; set; }
     }
 }

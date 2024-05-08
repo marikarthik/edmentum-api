@@ -4,10 +4,6 @@ using EdmentumPOC.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-
-using System;
-using System.IO;
-
 namespace EdmentumPOC.Controllers
 {
     [Route("api/[controller]")]
@@ -23,8 +19,11 @@ namespace EdmentumPOC.Controllers
         [HttpPost]
         public IActionResult userjoinleave(UserJoinLeaveDTO request)
         {
+            string filePath = "userjoinleave.txt";
             try
             {
+                string content = JsonConvert.SerializeObject(request);
+                System.IO.File.WriteAllText(filePath, content);
                 _callbackManager.AddUserJoinLeave(request);
                 ReturnResponse result = new ReturnResponse();
                 result.message = "Received successfully.";
@@ -33,6 +32,7 @@ namespace EdmentumPOC.Controllers
             }
             catch (Exception ex)
             {
+                System.IO.File.WriteAllText(filePath, "Exception: " + ex.Message.ToString());
                 var errorMessage = $"Error: {ex.Message}";
                 return StatusCode(500, errorMessage);
             }
@@ -41,8 +41,11 @@ namespace EdmentumPOC.Controllers
         [HttpPost]
         public IActionResult meetingstartend(MeetingStartEndDTO request)
         {
+            string filePath = "meetingstartend.txt";
             try
             {
+                string content = JsonConvert.SerializeObject(request);
+                System.IO.File.WriteAllText(filePath, content);
                 _callbackManager.AddMeetingStartEnd(request);
                 ReturnResponse result = new ReturnResponse();
                 result.message = "Received successfully.";
@@ -51,6 +54,7 @@ namespace EdmentumPOC.Controllers
             }
             catch (Exception ex)
             {
+                System.IO.File.WriteAllText(filePath, "Exception: " + ex.Message.ToString());
                 var errorMessage = $"Error: {ex.Message}";
                 return StatusCode(500, errorMessage);
             }

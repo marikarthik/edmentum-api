@@ -1,4 +1,5 @@
 ﻿using EdmentumBLL.DTO;
+using EdmentumBLL.Enum;
 using EdmentumBLL.Manager;
 using EdmentumDAL.ModelClass;
 using EdmentumPOC.Models;
@@ -188,7 +189,22 @@ namespace EdmentumPOC.Controllers
             }
         }
 
-
-
+        [HttpPatch("{meetingId}/cancel")]
+        public IActionResult CancelMeeting(int meetingId)
+        {
+            try
+            {
+                ReturnResponse result = new ReturnResponse();
+                _meetingManager.UpdateMeetingStatus(meetingId, MeetingStatus.Cancelled.ToString());
+                result.message = "Meeting cancelled successfully.";
+                result.statuscode = 200;
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"Error cancelling the meeting: {ex.Message}";
+                return StatusCode(500, errorMessage);
+            }
+        }
     }
 }

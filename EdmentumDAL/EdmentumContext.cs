@@ -10,6 +10,8 @@ namespace EdmentumDAL
         public DbSet<Meeting> Meetings { get; set; }
         public DbSet<StudentMeeting> StudentMeetings { get; set; }
         public DbSet<TutorMeeting> TutorMeetings { get; set; }
+        public DbSet<UserJoinLeave> UserJoinLeave { get; set; }
+        public DbSet<MeetingStartEnd> MeetingStartEnd { get; set; }
         public EdmentumContext(DbContextOptions<EdmentumContext> options) : base(options)
         {
         }

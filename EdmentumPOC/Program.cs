@@ -14,7 +14,7 @@ builder.Services.AddScoped<TutorManager>();
 builder.Services.AddScoped<MeetingManager>();
 builder.Services.AddScoped<StudentMeetingManager>();
 builder.Services.AddScoped<TutorMeetingManager>();
-
+builder.Services.AddScoped<CallbackManager>();
 builder.Services.AddSwaggerGen();
 
 // Enable CORS: Update it in hosted file

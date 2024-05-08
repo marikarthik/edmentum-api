@@ -68,6 +68,7 @@ namespace EdmentumBLL.DTO
 
         [JsonProperty("quizIds")]
         public List<string> QuizIds { get; set; }
+        public realTimeCallbackUrl realTimeCallbackUrl { get; set; }
     }
     public class UpdateMeeting
     {
@@ -81,5 +82,11 @@ namespace EdmentumBLL.DTO
         public List<StudentList> Students { get; set; }
         [JsonProperty("Comments")]
         public string Comments { get; set; }
+    }
+    public class realTimeCallbackUrl
+    {
+        public string userJoinLeaveUrl { get; set; }
+        public string meetingStartEndUrl { get; set; }
+        public string recordingStartEndUrl { get; set; }
     }
 }

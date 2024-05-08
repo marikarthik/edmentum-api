@@ -126,8 +126,8 @@ namespace EdmentumPOC.Controllers
             HiLinkMeetingRequest meetingRequest = new HiLinkMeetingRequest();
             meetingRequest.MeetingTitle = meetingReq.Title;
             meetingRequest.CountdownStartTime = 5;
-            meetingRequest.CallbackUrl = "<https://www.hilink.co/>";
-            meetingRequest.RedirectUrl = "<https://www.hilink.co/>";
+            meetingRequest.CallbackUrl = "<http://ed-api.triconinfotech.net/api/callback/userjoinleave>";
+            meetingRequest.RedirectUrl = "<http://ed-api.triconinfotech.net/api/callback/meetingstartend>";
             meetingRequest.InvitationUrl = "<https://www.hilink.co/>";
             meetingRequest.MeetingRegion = "us-east-2";
             meetingRequest.MeetingExternalId = "1000001";
